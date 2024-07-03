@@ -7,7 +7,7 @@ const baseUrl = `${import.meta.env.VITE_API_URL}/auth`
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: JSON.parse(localStorage.getItem('user')),
-    token: null,
+    token: localStorage.getItem('token'),
     returnUrl: null
   }),
   actions: {
@@ -15,20 +15,29 @@ export const useAuthStore = defineStore('auth', {
       try {
         const response = await fetchWrapper.post(`${baseUrl}/register`, { username, password })
 
-        const { user, token } = response
+        console.log(response)
 
-        this.user = user
-        this.token = token
+        const { user } = response
 
-        // Store user and token in local storage
-        localStorage.setItem('user', JSON.stringify(user))
-        localStorage.setItem('token', token)
-
-        // Redirect to home or intended page
-        router.push(this.returnUrl || '/')
+        if (user) {
+          await this.login(username, password)
+        }
       } catch (error) {
         console.error(error)
       }
+    },
+    async login(username, password) {
+      const response = await fetchWrapper.post(`${baseUrl}/login`, { username, password })
+
+      const { user, token } = response
+
+      this.user = user
+      this.token = token
+
+      localStorage.setItem('user', JSON.stringify(user))
+      localStorage.setItem('token', token)
+
+      router.push(this.returnUrl || '/')
     },
     async logout() {
       this.user = null

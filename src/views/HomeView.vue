@@ -1,5 +1,4 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
 import { useAuthStore } from '@/stores/auth.store';
 
 const authStore = useAuthStore();
@@ -13,7 +12,6 @@ const { username, id } = authStore.user;
 
 <template>
   <main>
-    <TheWelcome />
     <button @click="logout">Log out</button>
     <h2>{{ username }}</h2>
     <p>{{ id }}</p>
