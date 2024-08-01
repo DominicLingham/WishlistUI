@@ -6,7 +6,7 @@ import { fetchWrapper } from '@/helpers/fetch.helper';
 const baseUrl = `${import.meta.env.VITE_API_URL}/wishlist`;
 
 const authStore = useAuthStore();
-const { username, id } = authStore.user;
+const { id } = authStore.user;
 
 const wishlistData = ref({
     user: id,
@@ -24,7 +24,10 @@ const saveWishlist = async () => {
 
 <template>
     <div>
-        <h3>{{ username }}</h3>
+        <h3>Add wishlist</h3>
+        <router-link to="/" custom v-slot="{ navigate }">
+            <button @click="navigate" role="link">Back</button>
+        </router-link>
         <form @submit.prevent="saveWishlist">
             <label for="wishlist-title">Title</label>
             <input v-model="wishlistData.name" type="text" id="wishlist-title" name="wishlist-title">
